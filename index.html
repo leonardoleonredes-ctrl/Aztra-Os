@@ -2061,5 +2061,78 @@ document.addEventListener("DOMContentLoaded",async()=>{if(localStorage.getItem("
 })();
 </script>
 
+
+
+<script>
+/* ==========================================================
+   FIX PERSISTENCIA DE PERSONALIZACIÓN
+   - Restaura tema visual después de cargar Supabase.
+   - Guarda cambios de color en localStorage y Supabase.
+   - Aplica colores al actualizar la web.
+   ========================================================== */
+(function(){
+  function setValue(id, value){
+    const el=document.getElementById(id);
+    if(el && value !== undefined && value !== null) el.value=value;
+  }
+
+  window.loadLuminarThemePersistent = function(){
+    try{
+      const raw=localStorage.getItem('luminarThemeLive');
+      if(raw){
+        const t=JSON.parse(raw);
+        setValue('bg-mode', t.mode);
+        setValue('bg-dir', t.dir);
+        setValue('bg-start', t.start);
+        setValue('bg-end', t.end);
+        setValue('bg-solid', t.solid);
+        setValue('font-main', t.font);
+      }
+    }catch(e){console.warn('No se pudo cargar tema Luminar:', e)}
+    try{ if(typeof applyTheme === 'function') applyTheme(); }catch(e){}
+    try{ if(typeof loadVisualColors === 'function') loadVisualColors(); }catch(e){}
+    try{ if(typeof applyVisualColors === 'function') applyVisualColors(); }catch(e){}
+  };
+
+  const oldApplyState = window.applyLuminarState;
+  if(typeof oldApplyState === 'function'){
+    window.applyLuminarState = function(state){
+      const result = oldApplyState.apply(this, arguments);
+      setTimeout(()=>window.loadLuminarThemePersistent(), 80);
+      return result;
+    };
+  }
+
+  const oldApplyTheme = window.applyTheme;
+  if(typeof oldApplyTheme === 'function'){
+    window.applyTheme = function(){
+      const result = oldApplyTheme.apply(this, arguments);
+      try{ if(typeof queueLuminarCloudSave === 'function') queueLuminarCloudSave(); }catch(e){}
+      return result;
+    };
+  }
+
+  const oldApplyVisualColors = window.applyVisualColors;
+  if(typeof oldApplyVisualColors === 'function'){
+    window.applyVisualColors = function(){
+      const result = oldApplyVisualColors.apply(this, arguments);
+      try{ if(typeof queueLuminarCloudSave === 'function') queueLuminarCloudSave(); }catch(e){}
+      return result;
+    };
+  }
+
+  window.saveTheme = function(){
+    try{ if(typeof applyTheme === 'function') applyTheme(); }catch(e){}
+    try{ if(typeof applyVisualColors === 'function') applyVisualColors(); }catch(e){}
+    try{ if(typeof saveLuminarCloudState === 'function') saveLuminarCloudState(true); }catch(e){}
+    alert('Personalización guardada.');
+  };
+
+  document.addEventListener('DOMContentLoaded',()=>{
+    setTimeout(()=>window.loadLuminarThemePersistent(), 500);
+    setTimeout(()=>window.loadLuminarThemePersistent(), 1600);
+  });
+})();
+</script>
 </body>
 </html>
