@@ -1165,6 +1165,162 @@ function startDashboardClock(){
 }
 
 function renderAll(){renderDashboard();renderAgenda();renderContentPlan();renderContentCalendar();renderScripts();renderRadar();renderSummary();renderNotes();renderClientsPanel();updateDashboardDateTime()}
+
+
+/* ==========================================================
+   LUMINAR CLOUD - MÓDULO CLIENTES REAL EN SUPABASE
+   Tabla usada: clientes
+   Mantiene localStorage como respaldo, pero sincroniza clientes
+   visibles/ocultos/borrados con Supabase.
+   ========================================================== */
+let __clientsCloudSyncTimer=null;
+let __clientsCloudLoading=false;
+function clientKeyName(name){return String(name||'').trim().toLowerCase();}
+function localClientToDb(c){
+  return {
+    nombre:c.name,
+    activo:c.active!==false,
+    visible:c.active!==false,
+    color:c.color||'#00a1ff',
+    notas:c.notes||c.notas||'',
+    logo_url:c.logo_url||c.logoUrl||null
+  };
+}
+function dbClientToLocal(row){
+  return {
+    id:row.id,
+    name:row.nombre,
+    active:row.activo!==false && row.visible!==false,
+    color:row.color||'#00a1ff',
+    notes:row.notas||'',
+    logo_url:row.logo_url||''
+  };
+}
+async function loadClientsFromSupabase(){
+  const client=getLuminarCloudClient();
+  if(!client || __clientsCloudLoading) return false;
+  __clientsCloudLoading=true;
+  try{
+    const {data,error}=await client.from('clientes').select('id,nombre,activo,visible,color,notas,logo_url,created_at').order('created_at',{ascending:true});
+    if(error) throw error;
+    if(Array.isArray(data) && data.length){
+      clients=normalizeClients(data.map(dbClientToLocal));
+      saveClientsLocalOnly();
+      ensureActiveContextClient();
+      initContextSelectors();
+      renderClientsPanel();
+      renderAll();
+      console.log('Luminar Cloud: clientes cargados desde tabla clientes.');
+    }else{
+      await syncClientsToSupabase(true);
+      console.log('Luminar Cloud: clientes iniciales enviados a Supabase.');
+    }
+    return true;
+  }catch(err){
+    console.error('Luminar Cloud: error al cargar clientes.',err);
+    return false;
+  }finally{
+    __clientsCloudLoading=false;
+  }
+}
+function saveClientsLocalOnly(){
+  localStorage.setItem('luminarClients',JSON.stringify(clients));
+}
+function saveClients(){
+  saveClientsLocalOnly();
+  queueClientsCloudSync();
+  if(typeof queueLuminarCloudSave==='function') queueLuminarCloudSave();
+}
+function queueClientsCloudSync(){
+  clearTimeout(__clientsCloudSyncTimer);
+  __clientsCloudSyncTimer=setTimeout(()=>syncClientsToSupabase(false),700);
+}
+async function syncClientsToSupabase(seedMode=false){
+  const client=getLuminarCloudClient();
+  if(!client) return false;
+  try{
+    for(const c of clients){
+      if(!c || !c.name) continue;
+      if(c.id){
+        const {error}=await client.from('clientes').update(localClientToDb(c)).eq('id',c.id);
+        if(error) throw error;
+      }else{
+        const {data:existing,error:findErr}=await client.from('clientes').select('id').ilike('nombre',c.name).maybeSingle();
+        if(findErr) throw findErr;
+        if(existing?.id){
+          c.id=existing.id;
+          const {error}=await client.from('clientes').update(localClientToDb(c)).eq('id',c.id);
+          if(error) throw error;
+        }else{
+          const {data,error}=await client.from('clientes').insert(localClientToDb(c)).select('id').single();
+          if(error) throw error;
+          if(data?.id)c.id=data.id;
+        }
+      }
+    }
+    saveClientsLocalOnly();
+    if(!seedMode) console.log('Luminar Cloud: clientes guardados en tabla clientes.');
+    return true;
+  }catch(err){
+    console.error('Luminar Cloud: error al guardar clientes.',err);
+    return false;
+  }
+}
+function addClientRecord(name){
+  name=(name||'').trim(); if(!name)return null;
+  let existing=clients.find(c=>clientKeyName(c.name)===clientKeyName(name));
+  if(existing){existing.active=true;saveClients();return existing.name;}
+  clients.push({name,active:true,color:'#00a1ff'});
+  saveClients();
+  return name;
+}
+function toggleClientActive(name){
+  const c=clients.find(x=>x.name===name); if(!c)return;
+  c.active=!c.active;
+  saveClients();
+  ensureActiveContextClient(); initContextSelectors(); renderClientsPanel(); renderAll();
+}
+async function renameClient(oldName,newName){
+  newName=(newName||'').trim(); if(!newName||newName===oldName)return;
+  if(clients.some(c=>c.name.toLowerCase()===newName.toLowerCase()&&c.name!==oldName)){alert('Ya existe un cliente con ese nombre.');return;}
+  const c=clients.find(x=>x.name===oldName); if(!c)return;
+  c.name=newName;
+  contentItems.forEach(i=>{if(i.client===oldName)i.client=newName});
+  scripts.forEach(sc=>{if(sc.client===oldName)sc.client=newName});
+  if(context.client===oldName)context.client=newName;
+  saveClients(); initContextSelectors(); renderAll();
+  const client=getLuminarCloudClient();
+  if(client){
+    try{
+      if(c.id) await client.from('clientes').update(localClientToDb(c)).eq('id',c.id);
+      else await client.from('clientes').update(localClientToDb(c)).ilike('nombre',oldName);
+    }catch(err){console.error('Luminar Cloud: error al renombrar cliente.',err);}
+  }
+}
+async function deleteClientFull(name){
+  const pin=prompt(`Para borrar completamente ${name}, escribe el PIN de seguridad:`);
+  if(pin!==CLIENT_DELETE_PIN){alert('PIN incorrecto. No se borró el cliente.');return;}
+  if(!confirm(`Esto borrará TODO lo relacionado a ${name}: planes, métricas y guiones. ¿Continuar?`))return;
+  const c=clients.find(x=>x.name===name);
+  clients=clients.filter(x=>x.name!==name);
+  contentItems=contentItems.filter(i=>i.client!==name);
+  scripts=scripts.filter(s=>s.client!==name);
+  saveClientsLocalOnly();
+  ensureActiveContextClient(); initContextSelectors(); renderClientsPanel(); renderAll();
+  const client=getLuminarCloudClient();
+  if(client){
+    try{
+      if(c?.id) await client.from('clientes').delete().eq('id',c.id);
+      else await client.from('clientes').delete().ilike('nombre',name);
+      await saveLuminarCloudState(true);
+      console.log('Luminar Cloud: cliente eliminado de Supabase.');
+    }catch(err){console.error('Luminar Cloud: error al borrar cliente.',err);}
+  }
+}
+window.addEventListener('DOMContentLoaded',()=>{
+  setTimeout(()=>loadClientsFromSupabase(),1300);
+});
+
 document.addEventListener("DOMContentLoaded",async()=>{if(localStorage.getItem("luminarSidebar")==="yes")document.body.classList.add("sidebar-collapsed");await loadLuminarCloudState();const n=localStorage.getItem("luminarProfileName");if(n){document.getElementById("profile-name").textContent=n;document.getElementById("profile-input-name").value=n}const p=localStorage.getItem("luminarPhoto");if(p)document.getElementById("profile-pic").src=p;initContextSelectors();renderAll();startDashboardClock();if(typeof loadVisualColors==="function")loadVisualColors();installLuminarCloudAutosave();queueLuminarCloudSave();});
 </script>
 </body>
