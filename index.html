@@ -140,6 +140,44 @@ input[type="color"]{width:100%;height:44px;border:1px solid var(--card-border);b
 .agenda-editor .field-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .agenda-tag-preview{display:inline-flex;width:max-content;border-radius:999px;padding:4px 10px;font-size:.75rem;font-weight:900;margin-top:4px;border:1px solid currentColor;background:rgba(255,255,255,.06);}
 
+
+/* FIX Agenda Personal - etiquetas y menú contextual */
+.agenda-editor .quick-tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:6px}
+.agenda-editor .quick-tag,
+#agenda-quick-tags .quick-tag{
+  border:1px solid color-mix(in srgb,var(--qt-color,#00f0ff) 35%, transparent)!important;
+  background:color-mix(in srgb,var(--qt-color,#00f0ff) 18%, transparent)!important;
+  color:var(--qt-color,#00f0ff)!important;
+  border-radius:999px!important;
+  padding:6px 10px!important;
+  font-size:.72rem!important;
+  font-weight:900!important;
+  box-shadow:0 0 12px color-mix(in srgb,var(--qt-color,#00f0ff) 12%, transparent)!important;
+}
+.agenda-editor .quick-tag:hover,
+#agenda-quick-tags .quick-tag:hover{
+  transform:translateY(-1px);
+  background:color-mix(in srgb,var(--qt-color,#00f0ff) 26%, transparent)!important;
+}
+.agenda-tag-context-menu{
+  position:fixed;min-width:210px;background:rgba(7,10,24,.96);
+  border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:8px;
+  backdrop-filter:blur(22px);box-shadow:0 18px 48px rgba(0,0,0,.5),0 0 24px rgba(0,240,255,.08);
+  z-index:99999;display:none;
+}
+.agenda-tag-context-menu.active{display:block}
+.agenda-tag-context-menu{max-height:min(320px,calc(100vh - 24px));overflow:auto}
+.agenda-tag-context-menu button{
+  width:100%;display:flex;align-items:center;gap:8px;background:transparent;border:0;
+  color:#fff;text-align:left;padding:9px 10px;border-radius:10px;font-size:.82rem;font-weight:900;cursor:pointer;
+}
+.agenda-tag-context-menu button:hover{background:rgba(255,255,255,.07)}
+.agenda-tag-context-menu button.danger{color:#ff9db5}
+.agenda-quick-tag-wrap{display:inline-flex;align-items:center;border:1px solid color-mix(in srgb,var(--qt-color,#00f0ff) 35%, transparent);background:color-mix(in srgb,var(--qt-color,#00f0ff) 18%, transparent);border-radius:999px;overflow:hidden;box-shadow:0 0 12px color-mix(in srgb,var(--qt-color,#00f0ff) 12%, transparent)}
+.agenda-quick-tag-wrap .quick-tag{border:0!important;background:transparent!important;border-radius:0!important;box-shadow:none!important}
+.agenda-quick-tag-delete{width:25px;height:25px;border:0;border-left:1px solid color-mix(in srgb,var(--qt-color,#00f0ff) 30%, transparent);background:rgba(255,255,255,.04);color:var(--qt-color,#00f0ff);font-weight:900;cursor:pointer;line-height:1}
+.agenda-quick-tag-delete:hover{background:rgba(255,51,102,.18);color:#ff9db5}
+
 .print-report{display:none}
 @media print{
   @page{size:A4 landscape;margin:10mm}
@@ -1923,11 +1961,10 @@ document.addEventListener("DOMContentLoaded",async()=>{if(localStorage.getItem("
       <div class="field"><label>Etiqueta</label><div class="agenda-tag-row"><input class="input" id="agenda-edit-tag" list="agenda-default-tags-list" oninput="syncAgendaEditor()" placeholder="Ej. Trabajo"><input class="input" type="color" id="agenda-edit-color" onchange="syncAgendaEditor()"></div><datalist id="agenda-default-tags-list"></datalist><div class="quick-tags" id="agenda-quick-tags"></div><span class="saved-hint" id="agenda-saved-hint">Etiqueta guardada como predeterminada.</span></div>
       <div class="option-row"><span>Aumentar etiqueta visualmente</span><input class="switch" type="checkbox" id="agenda-edit-tag-large" onchange="syncAgendaEditor()"></div>
       <div class="option-row"><span>Guardar etiqueta como predeterminada</span><button class="btn" onclick="saveAgendaDefaultTag()">Guardar</button></div>
-      <div class="field-grid">
-        <div class="field"><label>Estado</label><select class="select" id="agenda-edit-state" onchange="syncAgendaEditor()"><option>Pendiente</option><option>En proceso</option><option>Completado</option></select></div>
-        <div class="field"><label>Pilar</label><select class="select" id="agenda-edit-pilar" onchange="syncAgendaEditor()"><option value="estrategia">Estrategia</option><option value="contenido">Contenido</option><option value="edicion">Edición</option><option value="merchandising">Merchandising</option><option value="ventas">Ventas</option><option value="cliente">Cliente</option></select></div>
+      <div class="field">
+        <label>Estado</label><select class="select" id="agenda-edit-state" onchange="syncAgendaEditor()"><option>Pendiente</option><option>En proceso</option><option>Completado</option></select>
       </div>
-      <div class="field"><label>Drive / Script</label><input class="input" id="agenda-edit-drive-link" oninput="syncAgendaEditor()" placeholder="https://drive.google.com/..."></div>
+      <div class="field"><label>Link</label><input class="input" id="agenda-edit-drive-link" oninput="syncAgendaEditor()" placeholder="https://..."></div>
       <div class="field"><label>Notas</label><textarea class="input" id="agenda-edit-notes" oninput="syncAgendaEditor()" rows="3" placeholder="Notas internas"></textarea></div>
       <span class="agenda-tag-preview" id="agenda-tag-preview">Etiqueta</span>
       <div class="panel-actions"><button class="btn" onclick="duplicateAgendaActive()">Duplicar</button><button class="btn-danger" onclick="deleteAgendaActive()">Eliminar</button></div>`;
@@ -1936,16 +1973,19 @@ document.addEventListener("DOMContentLoaded",async()=>{if(localStorage.getItem("
     const dl=document.getElementById('agenda-default-tags-list'), qt=document.getElementById('agenda-quick-tags');
     if(!dl || !qt) return;
     dl.innerHTML = agendaDefaultTags.map(t=>`<option value="${escAttr(t.name)}"></option>`).join('');
-    qt.innerHTML = agendaDefaultTags.map(t=>`<button class="quick-tag" style="--qt-color:${t.color}" onclick="applyAgendaQuickTag('${escAttr(t.name)}','${t.color}')">${esc(t.name)}</button>`).join('');
+    qt.innerHTML = agendaDefaultTags.map(t=>{
+      const userCreated = t.createdByUser === true;
+      return `<span class="agenda-quick-tag-wrap" style="--qt-color:${t.color}" data-tag-name="${escAttr(t.name)}" data-tag-color="${t.color}" data-user-created="${userCreated}" oncontextmenu="openAgendaTagMenu(event)"><button type="button" class="quick-tag" onclick="applyAgendaQuickTag('${escAttr(t.name)}','${t.color}')">${esc(t.name)}</button>${userCreated?`<button type="button" class="agenda-quick-tag-delete" title="Eliminar etiqueta" onclick="deleteAgendaDefaultTag('${escAttr(t.name)}')">×</button>`:''}</span>`;
+    }).join('');
   }
   function agendaTaskHTML(t){
     normalizeAgendaTask(t);
     const st=statusForAgenda(t), meta=statusMeta(st,agendaDue(t));
     const color=t.tagColor||t.color||meta.hex;
-    const advanced = `<div class="advanced-task-details"><span class="advanced-mini-chip">${esc(t.state||'Pendiente')}</span><span class="advanced-mini-chip">Pilar: ${esc(t.pilar||'contenido')}</span>${t.driveLink?'<span class="advanced-mini-chip">Drive vinculado</span>':''}</div>`;
-    return `<div class="notion-block agenda-notion-block" tabindex="0" style="--task-color:${meta.hex};--tag-color:${color}" data-status="${st}" data-view-mode="${agendaViewMode}" onclick="openAgendaEditor('${t.id}')">
+    const advanced = `<div class="advanced-task-details"><span class="advanced-mini-chip">${esc(t.state||'Pendiente')}</span>${t.driveLink?'<span class="advanced-mini-chip">Link vinculado</span>':''}</div>`;
+    return `<div class="notion-block agenda-notion-block" tabindex="0" style="--task-color:${meta.hex};--tag-color:${color}" data-status="${st}" data-view-mode="${agendaViewMode}" onclick="openAgendaEditor('${t.id}')" oncontextmenu="event.preventDefault();event.stopPropagation();openAgendaTaskMenu(event,'${t.id}')" ontouchstart="startAgendaLongPress(event,'${t.id}')" ontouchend="cancelAgendaLongPress()" ontouchmove="cancelAgendaLongPress()">
       <div class="task-title" contenteditable="true" spellcheck="false" oninput="editAgendaTitleInline(event,'${t.id}')" onclick="event.stopPropagation();openAgendaEditor('${t.id}')">${esc(t.title)}</div>
-      <button class="task-menu-btn" onclick="event.stopPropagation();openAgendaEditor('${t.id}')">⋯</button>
+      <button class="task-menu-btn" onclick="event.stopPropagation();openAgendaTaskMenu(event,'${t.id}')">⋯</button>
       <div class="task-meta-line">
         <span class="status-dot"></span>
         <span class="tag-chip" style="--tag-color:${color};${t.tagLarge?'font-size:.7rem;padding:3px 9px;':''}">${esc(t.tag||'Etiqueta')}</span>
@@ -2014,13 +2054,13 @@ document.addEventListener("DOMContentLoaded",async()=>{if(localStorage.getItem("
   };
   window.taskCard = function(t){
     normalizeAgendaTask(t); const st=statusForAgenda(t), meta=statusMeta(st,agendaDue(t)), color=t.tagColor||t.color||meta.hex;
-    return `<div class="task-item" onclick="openAgendaEditor('${t.id}')" style="border-left-color:${color};box-shadow:0 0 12px ${meta.hex}18"><div class="task-header-row"><span class="task-title">${esc(t.title)}</span><span class="task-badge" style="background:${meta.hex}20;color:${meta.hex};border:1px solid ${meta.hex}">${meta.label}</span></div><div class="task-details"><span class="detail-tag" style="color:${color};border-color:${color}">🏷️ ${esc(t.tag||'sin etiqueta')}</span><span>${esc(agendaDue(t))}</span><span>${esc(t.deliveryTime||t.time||'')}</span><span style="color:#fff;font-weight:800">${esc(meta.desc)}</span></div></div>`;
+    return `<div class="task-item" onclick="openAgendaEditor('${t.id}')" oncontextmenu="event.preventDefault();event.stopPropagation();openAgendaTaskMenu(event,'${t.id}')" ontouchstart="startAgendaLongPress(event,'${t.id}')" ontouchend="cancelAgendaLongPress()" ontouchmove="cancelAgendaLongPress()" style="border-left-color:${color};box-shadow:0 0 12px ${meta.hex}18"><div class="task-header-row"><span class="task-title">${esc(t.title)}</span><span class="task-badge" style="background:${meta.hex}20;color:${meta.hex};border:1px solid ${meta.hex}">${meta.label}</span></div><div class="task-details"><span class="detail-tag" style="color:${color};border-color:${color}">🏷️ ${esc(t.tag||'sin etiqueta')}</span><span>${esc(agendaDue(t))}</span><span>${esc(t.deliveryTime||t.time||'')}</span><span style="color:#fff;font-weight:800">${esc(meta.desc)}</span></div></div>`;
   };
   window.openAgendaEditor = function(id){
     agendaActiveTaskId=id; const t=(window.agendaTasks||[]).find(x=>x.id===id); if(!t)return; normalizeAgendaTask(t);
     const ed=document.getElementById('agenda-editor'); if(ed) ed.classList.add('active');
     const set=(id,val)=>{const e=document.getElementById(id); if(e) e.value=val||'';};
-    set('agenda-edit-title',t.title); set('agenda-edit-start-date',t.startDate); set('agenda-edit-end-date',t.endDate); set('agenda-edit-time',t.deliveryTime||'09:00'); set('agenda-edit-tag',t.tag); set('agenda-edit-color',t.tagColor||'#00f0ff'); set('agenda-edit-state',t.state||'Pendiente'); set('agenda-edit-pilar',t.pilar||'contenido'); set('agenda-edit-drive-link',t.driveLink||''); set('agenda-edit-notes',t.notes||'');
+    set('agenda-edit-title',t.title); set('agenda-edit-start-date',t.startDate); set('agenda-edit-end-date',t.endDate); set('agenda-edit-time',t.deliveryTime||'09:00'); set('agenda-edit-tag',t.tag); set('agenda-edit-color',t.tagColor||'#00f0ff'); set('agenda-edit-state',t.state||'Pendiente'); set('agenda-edit-drive-link',t.driveLink||''); set('agenda-edit-notes',t.notes||'');
     const large=document.getElementById('agenda-edit-tag-large'); if(large) large.checked=!!t.tagLarge;
     updateAgendaPreview(t.tag,t.tagColor);
     renderAgendaTagHelpers();
@@ -2030,9 +2070,39 @@ document.addEventListener("DOMContentLoaded",async()=>{if(localStorage.getItem("
   window.syncAgendaEditor = function(rerender=false){
     const t=(window.agendaTasks||[]).find(x=>x.id===agendaActiveTaskId); if(!t)return; normalizeAgendaTask(t);
     const val=id=>document.getElementById(id)?.value || '';
-    t.title=val('agenda-edit-title')||'Nueva tarea'; t.startDate=val('agenda-edit-start-date')||AGENDA_HOY; t.endDate=val('agenda-edit-end-date')||t.startDate; t.date=t.endDate; t.deliveryTime=val('agenda-edit-time')||'09:00'; t.time=t.deliveryTime; t.tag=val('agenda-edit-tag')||'tarea'; t.tagColor=val('agenda-edit-color')||'#00f0ff'; t.color=t.tagColor; t.state=val('agenda-edit-state')||'Pendiente'; t.pilar=val('agenda-edit-pilar')||'contenido'; t.driveLink=val('agenda-edit-drive-link'); t.notes=val('agenda-edit-notes'); t.tagLarge=!!document.getElementById('agenda-edit-tag-large')?.checked;
+    t.title=val('agenda-edit-title')||'Nueva tarea'; t.startDate=val('agenda-edit-start-date')||AGENDA_HOY; t.endDate=val('agenda-edit-end-date')||t.startDate; t.date=t.endDate; t.deliveryTime=val('agenda-edit-time')||'09:00'; t.time=t.deliveryTime; t.tag=val('agenda-edit-tag')||'tarea'; t.tagColor=val('agenda-edit-color')||'#00f0ff'; t.color=t.tagColor; t.state=val('agenda-edit-state')||'Pendiente'; t.driveLink=val('agenda-edit-drive-link'); t.notes=val('agenda-edit-notes'); t.tagLarge=!!document.getElementById('agenda-edit-tag-large')?.checked;
     updateAgendaPreview(t.tag,t.tagColor); renderAgenda(); try{renderDashboard();}catch(e){} queueAgendaSave(); if(rerender) openAgendaEditor(t.id);
   };
+
+  window.openAgendaTaskMenu = function(ev,id){
+    let menu=document.getElementById('agenda-task-context-menu');
+    if(!menu){
+      menu=document.createElement('div');
+      menu.id='agenda-task-context-menu';
+      menu.className='agenda-tag-context-menu';
+      document.body.appendChild(menu);
+    }
+    const t=(window.agendaTasks||[]).find(x=>x.id===id);
+    if(!t) return;
+    menu.innerHTML=`<button type="button" onclick="openAgendaEditorFromMenu('${id}')">✏️ Editar tarea</button><button type="button" onclick="markAgendaTaskDone('${id}')">✅ Marcar como hecho</button><button type="button" onclick="duplicateAgendaTaskFromMenu('${id}')">📋 Duplicar tarea</button><button type="button" onclick="openAgendaTaskLink('${id}')">🔗 Abrir link</button><button type="button" class="danger" onclick="deleteAgendaTaskFromMenu('${id}')">🗑️ Eliminar tarea</button>`;
+    menu.classList.add('active');
+    const rect=menu.getBoundingClientRect();
+    const left=Math.max(12,Math.min(ev.clientX,window.innerWidth-rect.width-12));
+    const top=Math.max(12,Math.min(ev.clientY,window.innerHeight-rect.height-12));
+    menu.style.left=left+'px';
+    menu.style.top=top+'px';
+  };
+  window.closeAgendaTaskMenu = function(){const m=document.getElementById('agenda-task-context-menu'); if(m)m.classList.remove('active');};
+  window.openAgendaEditorFromMenu = function(id){closeAgendaTaskMenu(); openAgendaEditor(id);};
+  window.duplicateAgendaTaskFromMenu = function(id){const t=(window.agendaTasks||[]).find(x=>x.id===id); if(!t)return; const copy={...t,id:'AG-'+Date.now(),title:(t.title||'Tarea')+' copia'}; window.agendaTasks.push(copy); closeAgendaTaskMenu(); renderAgenda(); openAgendaEditor(copy.id); queueAgendaSave();};
+  window.openAgendaTaskLink = function(id){const t=(window.agendaTasks||[]).find(x=>x.id===id); if(!t || !t.driveLink){alert('Esta tarea no tiene link vinculado.');return;} const url=/^https?:\/\//i.test(t.driveLink)?t.driveLink:'https://'+t.driveLink; window.open(url,'_blank','noopener'); closeAgendaTaskMenu();};
+  let agendaLongPressTimer=null;
+  window.startAgendaLongPress = function(ev,id){cancelAgendaLongPress(); agendaLongPressTimer=setTimeout(()=>{const touch=ev.touches&&ev.touches[0]; const point=touch||ev; openAgendaTaskMenu({clientX:point.clientX||120,clientY:point.clientY||120,preventDefault(){},stopPropagation(){}},id);},650);};
+  window.cancelAgendaLongPress = function(){if(agendaLongPressTimer){clearTimeout(agendaLongPressTimer); agendaLongPressTimer=null;}};
+  window.markAgendaTaskDone = function(id){const t=(window.agendaTasks||[]).find(x=>x.id===id); if(!t)return; t.state='Completado'; closeAgendaTaskMenu(); renderAgenda(); try{renderDashboard();}catch(e){} queueAgendaSave();};
+  window.deleteAgendaTaskFromMenu = function(id){if(!confirm('¿Eliminar esta tarea personal?'))return; window.agendaTasks=(window.agendaTasks||[]).filter(t=>t.id!==id); if(agendaActiveTaskId===id)closeAgendaEditor(); closeAgendaTaskMenu(); renderAgenda(); try{renderDashboard();}catch(e){} queueAgendaSave();};
+  document.addEventListener('click', function(e){ if(!e.target.closest('#agenda-task-context-menu')){ try{closeAgendaTaskMenu();}catch(_){}} if(!e.target.closest('#agenda-tag-delete-context-menu')&&!e.target.closest('.agenda-quick-tag-wrap')){ try{closeAgendaTagMenu();}catch(_){}} });
+  document.addEventListener('scroll', function(){try{closeAgendaTaskMenu();closeAgendaTagMenu();}catch(_){}}, true);
   window.editAgendaTitleInline = function(ev,id){const t=(window.agendaTasks||[]).find(x=>x.id===id); if(!t)return; t.title=ev.currentTarget.innerText.trim()||'Nueva tarea'; if(agendaActiveTaskId===id){const e=document.getElementById('agenda-edit-title'); if(e)e.value=t.title;} queueAgendaSave();};
   window.createAgendaTaskInDay = function(iso){const first=agendaDefaultTags[1]||agendaDefaultTags[0]; const t={id:'AG-'+Date.now(),title:'Nueva tarea',startDate:iso,endDate:iso,date:iso,deliveryTime:'09:00',time:'09:00',tag:first.name,tagColor:first.color,color:first.color,tagLarge:false,state:'Pendiente',pilar:'contenido',driveLink:'',notes:''}; window.agendaTasks.push(t); renderAgenda(); openAgendaEditor(t.id); queueAgendaSave();};
   window.addAgendaTask = function(){createAgendaTaskInDay(AGENDA_HOY);};
@@ -2040,6 +2110,27 @@ document.addEventListener("DOMContentLoaded",async()=>{if(localStorage.getItem("
   window.deleteAgendaActive = function(){if(!agendaActiveTaskId)return; if(!confirm('¿Eliminar esta tarea personal?'))return; window.agendaTasks=window.agendaTasks.filter(t=>t.id!==agendaActiveTaskId); closeAgendaEditor(); renderAgenda(); try{renderDashboard();}catch(e){} queueAgendaSave();};
   window.applyAgendaQuickTag = function(name,color){const tag=document.getElementById('agenda-edit-tag'), c=document.getElementById('agenda-edit-color'); if(tag)tag.value=name; if(c)c.value=color; syncAgendaEditor();};
   window.saveAgendaDefaultTag = function(){const name=(document.getElementById('agenda-edit-tag')?.value||'').trim(), color=document.getElementById('agenda-edit-color')?.value||'#00f0ff'; if(!name)return; const ex=agendaDefaultTags.find(t=>t.name.toLowerCase()===name.toLowerCase()); if(ex)ex.color=color; else agendaDefaultTags.push({name,color,createdByUser:true}); renderAgendaTagHelpers(); const h=document.getElementById('agenda-saved-hint'); if(h)h.classList.add('active');};
+
+  window.openAgendaTagMenu = function(ev){
+    ev.preventDefault();ev.stopPropagation();
+    const wrap=ev.currentTarget.closest('.agenda-quick-tag-wrap'); if(!wrap)return;
+    const name=wrap.dataset.tagName||'', color=wrap.dataset.tagColor||'#00f0ff', userCreated=wrap.dataset.userCreated==='true';
+    let menu=document.getElementById('agenda-tag-delete-context-menu');
+    if(!menu){menu=document.createElement('div');menu.id='agenda-tag-delete-context-menu';menu.className='agenda-tag-context-menu';document.body.appendChild(menu);}
+    menu.innerHTML=`<button type="button" onclick="applyAgendaQuickTag('${escAttr(name)}','${color}');closeAgendaTagMenu()">✅ Usar etiqueta</button>${userCreated?`<button type="button" class="danger" onclick="deleteAgendaDefaultTag('${escAttr(name)}')">🗑️ Eliminar etiqueta</button>`:`<button type="button" class="danger" onclick="alert('Esta etiqueta pertenece al sistema y no puede eliminarse.');closeAgendaTagMenu()">🔒 Etiqueta del sistema</button>`}`;
+    menu.classList.add('active');
+    const rect=menu.getBoundingClientRect();
+    menu.style.left=Math.max(12,Math.min(ev.clientX,window.innerWidth-rect.width-12))+'px';
+    menu.style.top=Math.max(12,Math.min(ev.clientY,window.innerHeight-rect.height-12))+'px';
+  };
+  window.closeAgendaTagMenu = function(){const m=document.getElementById('agenda-tag-delete-context-menu'); if(m)m.classList.remove('active');};
+  window.deleteAgendaDefaultTag = function(name){
+    const tag=(agendaDefaultTags||[]).find(t=>String(t.name||'').toLowerCase()===String(name||'').toLowerCase());
+    if(!tag)return; if(tag.createdByUser!==true){alert('Esta etiqueta pertenece al sistema y no puede eliminarse.');return;}
+    if(!confirm(`¿Eliminar la etiqueta "${tag.name}"?`))return;
+    agendaDefaultTags=agendaDefaultTags.filter(t=>String(t.name||'').toLowerCase()!==String(tag.name||'').toLowerCase());
+    closeAgendaTagMenu();renderAgendaTagHelpers();queueAgendaSave();
+  };
   window.setAgendaCalendarView = function(view,btn){agendaCalendarView=view;document.querySelectorAll('[data-agenda-view]').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');renderAgenda();};
   window.setAgendaViewMode = function(mode,btn){agendaViewMode=mode;document.querySelectorAll('[data-agenda-mode]').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');renderAgenda();};
   window.setAgendaStatusFilter = function(f,el){agendaStatusFilter=f;document.querySelectorAll('[data-agenda-filter]').forEach(p=>p.classList.remove('active-filter'));if(el)el.classList.add('active-filter');renderAgenda();};
