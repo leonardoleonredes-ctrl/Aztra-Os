@@ -183,6 +183,15 @@ input[type="color"]{width:100%;height:44px;border:1px solid var(--card-border);b
 .luminar-popup-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.42);display:none;align-items:center;justify-content:center;z-index:99999;backdrop-filter:blur(8px)}
 .luminar-popup-backdrop.active{display:flex}.luminar-popup{min-width:min(380px,calc(100vw - 40px));max-width:480px;border-radius:22px;padding:1.35rem;border:1px solid rgba(255,255,255,.16);box-shadow:0 30px 80px rgba(0,0,0,.45);text-align:left}.luminar-popup h3{font-family:var(--font-title)!important;margin-bottom:.5rem;font-size:1rem}.luminar-popup p{line-height:1.45;white-space:pre-wrap}.luminar-popup .btn{margin-top:1rem;width:100%}
 </style>
+
+<style>
+/* Agenda Personal restaurada desde el calendario original, integrada sin menú lateral interno */
+.agenda-shell-restored .calendar-header-controls{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:1.5rem}.agenda-shell-restored .month-title{font-size:1.5rem;font-weight:800;font-family:var(--font-title);text-transform:uppercase;letter-spacing:1px}.agenda-subtitle{font-size:.85rem;margin-top:4px}.agenda-actions-restored{display:flex;gap:.7rem;align-items:center;flex-wrap:wrap}.agenda-month-nav{display:flex;gap:.45rem;align-items:center;flex-wrap:wrap}.calendar-view-selector{display:flex;background:rgba(255,255,255,.035);padding:6px;border-radius:14px;border:1px solid var(--card-border);gap:5px;flex-wrap:wrap}.cal-view-btn{background:transparent;border:0;color:var(--text-muted);padding:8px 12px;font-weight:800;border-radius:10px;cursor:pointer;font-size:.78rem}.cal-view-btn.active{background:rgba(255,255,255,.92);color:#0a0f24}.legend-pill{cursor:pointer;transition:.18s;user-select:none}.legend-pill:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.22)}.legend-pill.active-filter{background:rgba(255,255,255,.12);color:#fff;box-shadow:0 0 16px rgba(0,240,255,.08)}
+.agenda-zone-restored .day-cell{position:relative;overflow:visible}.agenda-zone-restored .day-cell.empty{opacity:.18}.add-task-day{opacity:0;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:var(--text-muted);width:24px;height:24px;border-radius:8px;cursor:pointer;transition:.2s}.day-cell:hover .add-task-day{opacity:1}.task-stack{display:flex;flex-direction:column;gap:6px}.agenda-notion-block{--task-color:#00f0ff;position:relative;display:grid;grid-template-columns:1fr auto;gap:6px;align-items:center;width:100%;min-height:34px;padding:7px 8px 7px 10px;border-radius:10px;background:color-mix(in srgb,var(--task-color) 14%, transparent);border:1px solid color-mix(in srgb,var(--task-color) 32%, transparent);border-left:3px solid var(--task-color);box-shadow:0 0 14px color-mix(in srgb,var(--task-color) 12%, transparent);cursor:text;transition:.18s}.agenda-notion-block:hover{transform:translateY(-1px);background:color-mix(in srgb,var(--task-color) 20%, transparent)}.agenda-notion-block[data-status="overdue"]{--task-color:var(--neon-rojo)}.agenda-notion-block[data-status="today"]{--task-color:var(--neon-amarillo)}.agenda-notion-block[data-status="due-soon"]{--task-color:var(--neon-azul)}.agenda-notion-block[data-status="on-track"]{--task-color:var(--neon-verde)}.agenda-notion-block[data-status="completed"]{--task-color:#8a99ad;opacity:.65}.agenda-notion-block[data-view-mode="advanced"]{padding:9px 10px;min-height:48px}.agenda-notion-block[data-view-mode="advanced"] .advanced-task-details{display:flex}.advanced-task-details{display:none;grid-column:1/-1;gap:5px;flex-wrap:wrap;margin-top:2px}.advanced-mini-chip{font-size:.58rem;color:rgba(255,255,255,.78);background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.09);border-radius:999px;padding:2px 6px;font-weight:800}.status-dot{width:7px;height:7px;border-radius:50%;background:var(--task-color);box-shadow:0 0 8px var(--task-color);display:inline-block;margin-right:4px;flex:0 0 auto}.tag-chip{display:inline-flex;align-items:center;border-radius:999px;padding:2px 7px;font-size:.61rem;font-weight:800;background:color-mix(in srgb,var(--tag-color,#00f0ff) 25%, transparent);color:var(--tag-color,#00f0ff);border:1px solid color-mix(in srgb,var(--tag-color,#00f0ff) 38%, transparent);max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.date-chip,.time-chip{font-size:.6rem;color:var(--task-color);font-weight:900;background:color-mix(in srgb,var(--task-color) 16%, transparent);border:1px solid color-mix(in srgb,var(--task-color) 30%, transparent);border-radius:999px;padding:2px 6px;white-space:nowrap;text-shadow:0 0 8px color-mix(in srgb,var(--task-color) 30%, transparent)}.holiday-badge{display:inline-flex;align-items:center;gap:4px;width:max-content;max-width:100%;padding:3px 7px;border-radius:999px;background:rgba(255,204,0,.12);border:1px solid rgba(255,204,0,.28);color:#ffcc00;font-size:.58rem;font-weight:900;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.holiday-badge:before{content:'🇵🇪'}.day-cell.holiday{border-color:#ff7a00;background:linear-gradient(180deg,rgba(255,122,0,.11),rgba(255,204,0,.035));box-shadow:0 0 22px rgba(255,122,0,.18),inset 0 0 0 1px rgba(255,204,0,.16)}
+.year-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.year-month-card{min-height:145px;background:rgba(255,255,255,.025);border:1px solid var(--card-border);border-radius:16px;padding:12px}.year-month-card h4{font-family:var(--font-title);font-size:.88rem;margin-bottom:8px}.year-task-line{font-size:.68rem;font-weight:800;border-left:3px solid var(--task-color);padding:5px 7px;margin:5px 0;border-radius:7px;background:color-mix(in srgb,var(--task-color) 13%, transparent);color:#fff}.week-grid,.day-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}.day-grid{grid-template-columns:1fr}.hour-grid{display:flex;flex-direction:column;gap:8px}.hour-row{display:grid;grid-template-columns:74px 1fr;gap:10px;align-items:stretch}.hour-label{color:var(--text-muted);font-size:.72rem;font-weight:800;padding-top:10px;text-align:right}.hour-slot{min-height:56px;border:1px solid var(--card-border);background:rgba(255,255,255,.018);border-radius:14px;padding:8px}.view-empty{color:var(--text-muted);font-size:.85rem;padding:18px;border:1px dashed var(--card-border);border-radius:16px;text-align:center}.agenda-tag-row{display:grid;grid-template-columns:1fr 52px;gap:8px;align-items:center}.agenda-editor .field{margin-bottom:12px}.agenda-editor .panel-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.saved-hint{font-size:.7rem;color:var(--neon-verde);display:none;margin-top:6px}.saved-hint.active{display:block}
+@media(max-width:900px){.agenda-restored-head{align-items:flex-start!important;flex-direction:column}.calendar-view-selector{width:100%}.cal-view-btn{flex:1}.year-grid{grid-template-columns:1fr}.week-grid{grid-template-columns:1fr}.hour-row{grid-template-columns:54px 1fr}.agenda-actions-restored{width:100%}.agenda-month-nav{width:100%;display:grid;grid-template-columns:1fr 1fr 1fr}.agenda-zone-restored .month-grid{min-width:780px}.agenda-shell-restored .card{overflow:auto}}
+</style>
+
 </head>
 <body class="mode-macro">
 <div class="luminar-popup-backdrop" id="luminar-popup-backdrop"><div class="luminar-popup" id="luminar-popup-box"><h3>Luminar</h3><p id="luminar-popup-message"></p><button class="btn" onclick="closeLuminarPopup()">Aceptar</button></div></div>
@@ -1052,7 +1061,7 @@ function renderContentPlan(){const tbody=document.getElementById("content-tbody"
 </tr>`}).join("");document.getElementById("ctx-count").value=currentItems().length;buildPrintPlan();}
 function updateContent(id,key,value){let it=contentItems.find(x=>x.id===id);if(!it)return;if(key==="time")value=normalizeHour(value);it[key]=value;if(key==="date"){/* calendario de plan se actualiza solo por render */}renderDashboard();buildPrintPlan();if(typeof queueContentPlanCloudSync==="function") queueContentPlanCloudSync();}
 function addContentItem(){const n=contentItems.length+1;const id="CNT-"+String(n).padStart(3,"0");contentItems.push({id,client:context.client,month:context.month,year:context.year,status:"Idea",date:`${context.year}-${String(monthIndex[context.month]+1).padStart(2,"0")}-01`,time:"09:00",ampm:"AM",objective:"VALOR",network:"instagram",title:"Nuevo contenido",type:"Reel",format:"Reel",category:"Historia Curiosa o Biografía",scriptId:"",scriptMode:"app",refs:"",metrics:{reach:0,views:0,likes:0,comments:0,saves:0,shares:0,profile:0,followers:0}});renderContentPlan();if(typeof queueContentPlanCloudSync==="function") queueContentPlanCloudSync();}
-function deleteContent(id){contentItems=contentItems.filter(i=>i.id!==id);scripts.forEach(s=>{if(s.contentId===id)s.contentId=""});renderAll();if(typeof queueContentPlanCloudSync==="function") queueContentPlanCloudSync()}
+function deleteContent(id){contentItems=contentItems.filter(i=>i.id!==id);scripts.forEach(s=>{if(s.contentId===id)s.contentId=""});renderAll()}
 function adjustContentCount(v){let target=parseInt(v)||0;while(currentItems().length<target)addContentItem();while(currentItems().length>target){let last=currentItems().at(-1);deleteContent(last.id)}renderContentPlan()}
 function clearPlanFilters(){document.getElementById("plan-search").value="";document.getElementById("filter-status").value="";document.getElementById("filter-network").value="";renderContentPlan()}
 function buildPrintPlan(){const el=document.getElementById("print-plan");if(!el)return;const rows=currentItems().map((i,idx)=>`<tr><td class="p-num">${idx+1}</td><td class="p-date">${i.date}</td><td class="p-hour">${i.time} ${(i.ampm||'').split(" ")[0]}</td><td class="p-red">${redLabel(i.network)}</td><td class="p-obj">${i.objective}</td><td class="p-type">${i.type}</td><td class="p-format">${formatLabel(i.format)}</td><td class="p-title">${i.title}</td><td class="p-cat">${i.category}</td><td class="p-script">${(scripts.find(s=>s.id===i.scriptId)||{}).status||"Sin guion"}</td></tr>`).join("");el.innerHTML=`<h1>Plan de Contenido</h1><p style="font-size:12pt"><b>Cliente:</b> ${context.client} &nbsp; <b>Periodo:</b> ${context.month} ${context.year}</p><br><table class="print-table"><thead><tr><th style="width:4%">N°</th><th style="width:11%">Fecha</th><th style="width:9%">Hora</th><th style="width:8%">Red</th><th style="width:11%">Objetivo</th><th style="width:12%">Tipo de contenido</th><th style="width:10%">Formato</th><th style="width:18%">Título</th><th style="width:12%">Categoría</th><th style="width:9%">Guion</th></tr></thead><tbody>${rows}</tbody></table>`}
@@ -1481,5 +1490,319 @@ window.addEventListener('DOMContentLoaded',()=>{
 
 document.addEventListener("DOMContentLoaded",async()=>{if(localStorage.getItem("luminarSidebar")==="yes")document.body.classList.add("sidebar-collapsed");await loadLuminarCloudState();const n=localStorage.getItem("luminarProfileName");if(n){document.getElementById("profile-name").textContent=n;document.getElementById("profile-input-name").value=n}const p=localStorage.getItem("luminarPhoto");if(p)document.getElementById("profile-pic").src=p;initContextSelectors();renderAll();startDashboardClock();if(typeof loadVisualColors==="function")loadVisualColors();installLuminarCloudAutosave();queueLuminarCloudSave();});
 </script>
+
+<script>
+/* ==========================================================
+   AGENDA PERSONAL RESTAURADA - ESTILO ORIGINAL
+   Mantiene Supabase/localStorage del sistema actual, pero recupera
+   estructura, controles, editor, etiquetas y vista Notion Engine.
+   Se omite el mini menú lateral interno de Luminar/Configuración.
+   ========================================================== */
+(function(){
+  const AGENDA_HOY = (typeof TODAY !== 'undefined' ? TODAY : '2026-06-19');
+  const AGENDA_BASE_NOW = AGENDA_HOY + 'T09:00:00';
+  const MONTH_NAMES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  let agendaViewMode = 'macro';
+  let agendaCalendarView = 'month';
+  let agendaStatusFilter = 'all';
+  let agendaActiveTaskId = null;
+  let agendaYear = 2026;
+  let agendaMonth = 5;
+  let agendaDefaultTags = [
+    {name:'evento',color:'#ff6b6b',createdByUser:false},
+    {name:'tarea',color:'#00e676',createdByUser:false},
+    {name:'reunion',color:'#00f0ff',createdByUser:false},
+    {name:'meet/zoom',color:'#b066ff',createdByUser:false},
+    {name:'grabacion',color:'#ffcc00',createdByUser:false}
+  ];
+  const AGENDA_HOLIDAYS_PE_2026 = [
+    {date:'2026-01-01',localName:'Año Nuevo'},
+    {date:'2026-04-02',localName:'Jueves Santo'},
+    {date:'2026-04-03',localName:'Viernes Santo'},
+    {date:'2026-05-01',localName:'Día del Trabajo'},
+    {date:'2026-06-07',localName:'Batalla de Arica y Día de la Bandera'},
+    {date:'2026-06-29',localName:'San Pedro y San Pablo'},
+    {date:'2026-07-23',localName:'Día de la Fuerza Aérea del Perú'},
+    {date:'2026-07-28',localName:'Fiestas Patrias'},
+    {date:'2026-07-29',localName:'Fiestas Patrias'},
+    {date:'2026-08-06',localName:'Batalla de Junín'},
+    {date:'2026-08-30',localName:'Santa Rosa de Lima'},
+    {date:'2026-10-08',localName:'Combate de Angamos'},
+    {date:'2026-11-01',localName:'Todos los Santos'},
+    {date:'2026-12-08',localName:'Inmaculada Concepción'},
+    {date:'2026-12-09',localName:'Batalla de Ayacucho'},
+    {date:'2026-12-25',localName:'Navidad'}
+  ];
+
+  function esc(s){return String(s??'').replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[m]||m));}
+  function escAttr(s){return esc(s).replace(/'/g,'&#39;');}
+  function isoUTC(iso){const [y,m,d]=String(iso||AGENDA_HOY).split('-').map(Number);return Date.UTC(y||2026,(m||1)-1,d||1);}
+  function diffDays(iso){return Math.round((isoUTC(iso)-isoUTC(AGENDA_HOY))/86400000);}
+  function normalizeAgendaTask(t){
+    if(!t) return t;
+    if(!t.id) t.id = 'AG-' + Date.now() + '-' + Math.random().toString(36).slice(2,6);
+    if(!t.startDate) t.startDate = t.date || AGENDA_HOY;
+    if(!t.endDate) t.endDate = t.fecha || t.date || t.startDate || AGENDA_HOY;
+    if(!t.date) t.date = t.endDate;
+    if(!t.deliveryTime) t.deliveryTime = t.time || t.hora || '09:00';
+    if(!t.time) t.time = t.deliveryTime;
+    if(!t.tagColor) t.tagColor = t.color || t.color_etiqueta || '#00f0ff';
+    if(!t.color) t.color = t.tagColor;
+    if(!t.state) t.state = t.estado || 'Pendiente';
+    if(!t.pilar) t.pilar = 'contenido';
+    if(!t.driveLink) t.driveLink = t.drive_link || '';
+    if(!t.notes) t.notes = t.notas || '';
+    if(!t.title) t.title = t.titulo || 'Nueva tarea';
+    return t;
+  }
+  function normalizeAllAgenda(){
+    if(!Array.isArray(window.agendaTasks)) window.agendaTasks = [];
+    window.agendaTasks.forEach(normalizeAgendaTask);
+  }
+  function agendaDue(t){normalizeAgendaTask(t);return t.endDate||t.date||AGENDA_HOY;}
+  function statusForAgenda(t){
+    normalizeAgendaTask(t);
+    if((t.state||'').trim()==='Completado') return 'completed';
+    const due = agendaDue(t);
+    if(due === AGENDA_HOY) return 'today';
+    const d = diffDays(due);
+    if(d < 0) return 'overdue';
+    if(d >= 1 && d <= 3) return 'due-soon';
+    return 'on-track';
+  }
+  function statusMeta(status,due){
+    const d = diffDays(due);
+    const map = {
+      overdue:{label:'VENCIDO',desc:'Vencido',color:'var(--neon-rojo)',hex:'#ff3366'},
+      today:{label:'HOY',desc:'Entrega hoy',color:'var(--neon-amarillo)',hex:'#ffcc00'},
+      'due-soon':{label:'PRÓXIMO',desc:d>0?`Faltan ${d} días`:'Próximo',color:'var(--neon-azul)',hex:'#00f0ff'},
+      'on-track':{label:'EN PLAN',desc:d>0?`Faltan ${d} días`:'En plan',color:'var(--neon-verde)',hex:'#00e676'},
+      completed:{label:'COMPLETADA',desc:'Completada',color:'#8a99ad',hex:'#8a99ad'}
+    };
+    return map[status] || map['on-track'];
+  }
+  function formatShort(iso){if(!iso)return 'sin fin';const [y,m,d]=String(iso).split('-');return `${String(d).padStart(2,'0')}/${String(m).padStart(2,'0')}`;}
+  function agendaTimeLeft(t){
+    normalizeAgendaTask(t);
+    if((t.state||'')==='Completado') return 'Completada';
+    const now = new Date(AGENDA_BASE_NOW);
+    const due = new Date(`${agendaDue(t)}T${t.deliveryTime||'09:00'}:00`);
+    const ms = due - now;
+    if(ms < 0) return 'Hora vencida';
+    const mins = Math.floor(ms/60000), days=Math.floor(mins/1440), hrs=Math.floor((mins%1440)/60), rem=mins%60;
+    if(days>0) return `Faltan ${days}d ${hrs}h`;
+    if(hrs>0) return `Faltan ${hrs}h ${rem}m`;
+    if(mins>0) return `Faltan ${mins}m`;
+    return 'Entrega ahora';
+  }
+  function holidayForAgenda(iso){return AGENDA_HOLIDAYS_PE_2026.find(h=>h.date===iso)||null;}
+  function visibleAgendaTasks(){
+    normalizeAllAgenda();
+    return window.agendaTasks.filter(t=>agendaStatusFilter==='all' || statusForAgenda(t)===agendaStatusFilter);
+  }
+  function queueAgendaSave(){
+    try{ if(typeof queueLuminarCloudSave==='function') queueLuminarCloudSave(); }catch(e){}
+    try{ localStorage.setItem('luminarAgendaTasks', JSON.stringify(window.agendaTasks||[])); }catch(e){}
+  }
+  function calendarTitle(){
+    if(agendaCalendarView==='year') return `Año ${agendaYear}`;
+    if(agendaCalendarView==='week') return `Semana · ${MONTH_NAMES[agendaMonth]} ${agendaYear}`;
+    if(agendaCalendarView==='day') return `Día · ${MONTH_NAMES[agendaMonth]} ${agendaYear}`;
+    if(agendaCalendarView==='hour') return `Agenda por hora · ${MONTH_NAMES[agendaMonth]} ${agendaYear}`;
+    return `${MONTH_NAMES[agendaMonth]} ${agendaYear}`;
+  }
+  function agendaSectionHTML(){
+    return `
+    <div class="agenda-shell-restored">
+      <div class="calendar-header-controls agenda-restored-head">
+        <div>
+          <div class="month-title" id="agenda-calendar-title">${calendarTitle()}</div>
+          <p class="muted agenda-subtitle">Base temporal: ${AGENDA_HOY} · hora base 09:00</p>
+        </div>
+        <div class="calendar-actions agenda-actions-restored">
+          <div class="agenda-month-nav">
+            <button class="btn" onclick="changeAgendaMonth(-1)">‹ Mes</button>
+            <button class="btn" onclick="goAgendaToday()">Hoy</button>
+            <button class="btn" onclick="changeAgendaMonth(1)">Mes ›</button>
+          </div>
+          <div class="calendar-view-selector">
+            <button class="cal-view-btn" data-agenda-view="year" onclick="setAgendaCalendarView('year',this)">Año</button>
+            <button class="cal-view-btn active" data-agenda-view="month" onclick="setAgendaCalendarView('month',this)">Mes</button>
+            <button class="cal-view-btn" data-agenda-view="week" onclick="setAgendaCalendarView('week',this)">Semana</button>
+            <button class="cal-view-btn" data-agenda-view="day" onclick="setAgendaCalendarView('day',this)">Día</button>
+            <button class="cal-view-btn" data-agenda-view="hour" onclick="setAgendaCalendarView('hour',this)">Hora</button>
+          </div>
+          <div class="view-selector">
+            <button class="view-btn active" data-agenda-mode="macro" onclick="setAgendaViewMode('macro',this)">Macro</button>
+            <button class="view-btn" data-agenda-mode="advanced" onclick="setAgendaViewMode('advanced',this)">Advanced</button>
+          </div>
+          <button class="btn-primary" onclick="addAgendaTask()">+ Nueva tarea</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="notion-toolbar">
+          <strong>Vista de calendario</strong>
+          <div class="legend">
+            <span class="legend-pill active-filter" data-agenda-filter="all" onclick="setAgendaStatusFilter('all',this)"><i class="dot" style="background:#fff"></i>Todo</span>
+            <span class="legend-pill" data-agenda-filter="overdue" onclick="setAgendaStatusFilter('overdue',this)"><i class="dot" style="background:#ff3366"></i>Vencida</span>
+            <span class="legend-pill" data-agenda-filter="today" onclick="setAgendaStatusFilter('today',this)"><i class="dot" style="background:#ffcc00"></i>Hoy</span>
+            <span class="legend-pill" data-agenda-filter="due-soon" onclick="setAgendaStatusFilter('due-soon',this)"><i class="dot" style="background:#00f0ff"></i>Urgente</span>
+            <span class="legend-pill" data-agenda-filter="on-track" onclick="setAgendaStatusFilter('on-track',this)"><i class="dot" style="background:#39ff14"></i>Segura</span>
+          </div>
+        </div>
+        <div id="agenda-zone" class="agenda-zone-restored"></div>
+      </div>
+    </div>`;
+  }
+  function agendaEditorHTML(){
+    return `
+      <div class="panel-head"><h3>Editar tarea</h3><button class="close-panel" onclick="closeAgendaEditor()">✕</button></div>
+      <div class="field"><label>Título editable</label><input class="input" id="agenda-edit-title" oninput="syncAgendaEditor()" placeholder="Nombre de tarea"></div>
+      <div class="field-grid">
+        <div class="field"><label>Fecha de inicio</label><input class="input" type="date" id="agenda-edit-start-date" onchange="syncAgendaEditor(true)"></div>
+        <div class="field"><label>Fecha de fin de tarea</label><input class="input" type="date" id="agenda-edit-end-date" onchange="syncAgendaEditor(true)"></div>
+      </div>
+      <div class="field"><label>Hora de entrega</label><input class="input" type="time" id="agenda-edit-time" onchange="syncAgendaEditor(true)"></div>
+      <div class="field"><label>Etiqueta</label><div class="agenda-tag-row"><input class="input" id="agenda-edit-tag" list="agenda-default-tags-list" oninput="syncAgendaEditor()" placeholder="Ej. Trabajo"><input class="input" type="color" id="agenda-edit-color" onchange="syncAgendaEditor()"></div><datalist id="agenda-default-tags-list"></datalist><div class="quick-tags" id="agenda-quick-tags"></div><span class="saved-hint" id="agenda-saved-hint">Etiqueta guardada como predeterminada.</span></div>
+      <div class="option-row"><span>Aumentar etiqueta visualmente</span><input class="switch" type="checkbox" id="agenda-edit-tag-large" onchange="syncAgendaEditor()"></div>
+      <div class="option-row"><span>Guardar etiqueta como predeterminada</span><button class="btn" onclick="saveAgendaDefaultTag()">Guardar</button></div>
+      <div class="field-grid">
+        <div class="field"><label>Estado</label><select class="select" id="agenda-edit-state" onchange="syncAgendaEditor()"><option>Pendiente</option><option>En proceso</option><option>Completado</option></select></div>
+        <div class="field"><label>Pilar</label><select class="select" id="agenda-edit-pilar" onchange="syncAgendaEditor()"><option value="estrategia">Estrategia</option><option value="contenido">Contenido</option><option value="edicion">Edición</option><option value="merchandising">Merchandising</option><option value="ventas">Ventas</option><option value="cliente">Cliente</option></select></div>
+      </div>
+      <div class="field"><label>Drive / Script</label><input class="input" id="agenda-edit-drive-link" oninput="syncAgendaEditor()" placeholder="https://drive.google.com/..."></div>
+      <div class="field"><label>Notas</label><textarea class="input" id="agenda-edit-notes" oninput="syncAgendaEditor()" rows="3" placeholder="Notas internas"></textarea></div>
+      <span class="agenda-tag-preview" id="agenda-tag-preview">Etiqueta</span>
+      <div class="panel-actions"><button class="btn" onclick="duplicateAgendaActive()">Duplicar</button><button class="btn-danger" onclick="deleteAgendaActive()">Eliminar</button></div>`;
+  }
+  function renderAgendaTagHelpers(){
+    const dl=document.getElementById('agenda-default-tags-list'), qt=document.getElementById('agenda-quick-tags');
+    if(!dl || !qt) return;
+    dl.innerHTML = agendaDefaultTags.map(t=>`<option value="${escAttr(t.name)}"></option>`).join('');
+    qt.innerHTML = agendaDefaultTags.map(t=>`<button class="quick-tag" style="--qt-color:${t.color}" onclick="applyAgendaQuickTag('${escAttr(t.name)}','${t.color}')">${esc(t.name)}</button>`).join('');
+  }
+  function agendaTaskHTML(t){
+    normalizeAgendaTask(t);
+    const st=statusForAgenda(t), meta=statusMeta(st,agendaDue(t));
+    const color=t.tagColor||t.color||meta.hex;
+    const advanced = `<div class="advanced-task-details"><span class="advanced-mini-chip">${esc(t.state||'Pendiente')}</span><span class="advanced-mini-chip">Pilar: ${esc(t.pilar||'contenido')}</span>${t.driveLink?'<span class="advanced-mini-chip">Drive vinculado</span>':''}</div>`;
+    return `<div class="notion-block agenda-notion-block" tabindex="0" style="--task-color:${meta.hex};--tag-color:${color}" data-status="${st}" data-view-mode="${agendaViewMode}" onclick="openAgendaEditor('${t.id}')">
+      <div class="task-title" contenteditable="true" spellcheck="false" oninput="editAgendaTitleInline(event,'${t.id}')" onclick="event.stopPropagation();openAgendaEditor('${t.id}')">${esc(t.title)}</div>
+      <button class="task-menu-btn" onclick="event.stopPropagation();openAgendaEditor('${t.id}')">⋯</button>
+      <div class="task-meta-line">
+        <span class="status-dot"></span>
+        <span class="tag-chip" style="--tag-color:${color};${t.tagLarge?'font-size:.7rem;padding:3px 9px;':''}">${esc(t.tag||'Etiqueta')}</span>
+        <span class="date-chip">🏁 ${formatShort(agendaDue(t))} · ${esc(meta.desc)}</span>
+        <span class="time-chip">⏰ ${esc(t.deliveryTime||t.time||'09:00')} · ${esc(agendaTimeLeft(t))}</span>
+      </div>${advanced}</div>`;
+  }
+  function dayCellHTML(iso,label,items){
+    const h=holidayForAgenda(iso); const today=iso===AGENDA_HOY?'today':''; const holiday=h?'holiday':'';
+    let html=`<div class="day-cell ${today} ${holiday}" data-date="${iso}" data-month="${agendaMonth}" data-year="${agendaYear}"><div class="cell-number"><span>${label}</span><button class="add-task-day" onclick="createAgendaTaskInDay('${iso}')">+</button></div>`;
+    if(h) html += `<div class="holiday-badge" title="Feriado Perú: ${escAttr(h.localName)}">${esc(h.localName)}</div>`;
+    html += `<div class="task-stack">${items.map(agendaTaskHTML).join('')}</div></div>`;
+    return html;
+  }
+  function renderAgendaMonth(z){
+    let html='<div class="month-grid">'+['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'].map(d=>`<div class="day-name">${d}</div>`).join('');
+    const first=new Date(agendaYear,agendaMonth,1).getDay(); const days=new Date(agendaYear,agendaMonth+1,0).getDate();
+    for(let i=0;i<first;i++) html+='<div class="day-cell empty"></div>';
+    const all=visibleAgendaTasks();
+    for(let d=1;d<=days;d++){
+      const iso=`${agendaYear}-${String(agendaMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      html += dayCellHTML(iso,d,all.filter(t=>agendaDue(t)===iso));
+    }
+    z.innerHTML=html+'</div>';
+  }
+  function renderAgendaYear(z){
+    const all=visibleAgendaTasks();
+    let html='<div class="year-grid">';
+    for(let m=0;m<12;m++){
+      const items=all.filter(t=>String(agendaDue(t)).startsWith(String(agendaYear)+'-'+String(m+1).padStart(2,'0'))).sort((a,b)=>(agendaDue(a)+a.deliveryTime).localeCompare(agendaDue(b)+b.deliveryTime)).slice(0,6);
+      html += `<div class="year-month-card"><h4>${MONTH_NAMES[m]}</h4>`;
+      html += items.length ? items.map(t=>{const st=statusForAgenda(t), meta=statusMeta(st,agendaDue(t));return `<div class="year-task-line" style="--task-color:${meta.hex}" onclick="openAgendaEditor('${t.id}')">${formatShort(agendaDue(t))} · ${esc(t.title)}</div>`}).join('') : '<div class="view-empty">Sin tareas</div>';
+      html += '</div>';
+    }
+    z.innerHTML=html+'</div>';
+  }
+  function renderAgendaWeek(z){
+    const base=new Date(agendaYear,agendaMonth,1); const day=base.getDay(); const start=new Date(base); start.setDate(base.getDate()-day);
+    const all=visibleAgendaTasks(); let html='<div class="week-grid">';
+    for(let i=0;i<7;i++){const dt=new Date(start);dt.setDate(start.getDate()+i);const iso=`${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`;html+=dayCellHTML(iso,`${['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'][dt.getDay()]} ${dt.getDate()}`,all.filter(t=>agendaDue(t)===iso));}
+    z.innerHTML=html+'</div>';
+  }
+  function renderAgendaDay(z){
+    const iso = `${agendaYear}-${String(agendaMonth+1).padStart(2,'0')}-01`;
+    z.innerHTML = '<div class="day-grid">'+dayCellHTML(iso,`Día 01`,visibleAgendaTasks().filter(t=>agendaDue(t)===iso))+'</div>';
+  }
+  function renderAgendaHour(z){
+    const iso = `${agendaYear}-${String(agendaMonth+1).padStart(2,'0')}-01`;
+    const all=visibleAgendaTasks().filter(t=>agendaDue(t)===iso).sort((a,b)=>(a.deliveryTime||'23:59').localeCompare(b.deliveryTime||'23:59'));
+    let html='<div class="hour-grid">';
+    for(let h=6;h<=23;h++){const hh=String(h).padStart(2,'0'); const items=all.filter(t=>String(t.deliveryTime||'09:00').slice(0,2)===hh); html += `<div class="hour-row"><div class="hour-label">${hh}:00</div><div class="hour-slot">${items.length?items.map(agendaTaskHTML).join(''):'<div class="view-empty">Sin tareas</div>'}</div></div>`;}
+    z.innerHTML=html+'</div>';
+  }
+
+  window.renderAgenda = function(){
+    normalizeAllAgenda();
+    const title=document.getElementById('agenda-calendar-title'); if(title) title.textContent=calendarTitle();
+    const z=document.getElementById('agenda-zone'); if(!z) return;
+    if(agendaCalendarView==='year') renderAgendaYear(z);
+    else if(agendaCalendarView==='week') renderAgendaWeek(z);
+    else if(agendaCalendarView==='day') renderAgendaDay(z);
+    else if(agendaCalendarView==='hour') renderAgendaHour(z);
+    else renderAgendaMonth(z);
+    renderAgendaTagHelpers();
+    try{ updateDashboardKpis(); }catch(e){}
+  };
+  window.taskCard = function(t){
+    normalizeAgendaTask(t); const st=statusForAgenda(t), meta=statusMeta(st,agendaDue(t)), color=t.tagColor||t.color||meta.hex;
+    return `<div class="task-item" onclick="openAgendaEditor('${t.id}')" style="border-left-color:${color};box-shadow:0 0 12px ${meta.hex}18"><div class="task-header-row"><span class="task-title">${esc(t.title)}</span><span class="task-badge" style="background:${meta.hex}20;color:${meta.hex};border:1px solid ${meta.hex}">${meta.label}</span></div><div class="task-details"><span class="detail-tag" style="color:${color};border-color:${color}">🏷️ ${esc(t.tag||'sin etiqueta')}</span><span>${esc(agendaDue(t))}</span><span>${esc(t.deliveryTime||t.time||'')}</span><span style="color:#fff;font-weight:800">${esc(meta.desc)}</span></div></div>`;
+  };
+  window.openAgendaEditor = function(id){
+    agendaActiveTaskId=id; const t=(window.agendaTasks||[]).find(x=>x.id===id); if(!t)return; normalizeAgendaTask(t);
+    const ed=document.getElementById('agenda-editor'); if(ed) ed.classList.add('active');
+    const set=(id,val)=>{const e=document.getElementById(id); if(e) e.value=val||'';};
+    set('agenda-edit-title',t.title); set('agenda-edit-start-date',t.startDate); set('agenda-edit-end-date',t.endDate); set('agenda-edit-time',t.deliveryTime||'09:00'); set('agenda-edit-tag',t.tag); set('agenda-edit-color',t.tagColor||'#00f0ff'); set('agenda-edit-state',t.state||'Pendiente'); set('agenda-edit-pilar',t.pilar||'contenido'); set('agenda-edit-drive-link',t.driveLink||''); set('agenda-edit-notes',t.notes||'');
+    const large=document.getElementById('agenda-edit-tag-large'); if(large) large.checked=!!t.tagLarge;
+    updateAgendaPreview(t.tag,t.tagColor);
+    renderAgendaTagHelpers();
+  };
+  window.closeAgendaEditor = function(){const ed=document.getElementById('agenda-editor'); if(ed) ed.classList.remove('active'); agendaActiveTaskId=null;};
+  window.updateAgendaPreview = function(tag,color){const p=document.getElementById('agenda-tag-preview'); if(!p)return; p.textContent='🏷️ '+(tag||'Etiqueta'); p.style.color=color||'#00f0ff'; p.style.borderColor=color||'#00f0ff'; p.style.background=(color||'#00f0ff')+'22';};
+  window.syncAgendaEditor = function(rerender=false){
+    const t=(window.agendaTasks||[]).find(x=>x.id===agendaActiveTaskId); if(!t)return; normalizeAgendaTask(t);
+    const val=id=>document.getElementById(id)?.value || '';
+    t.title=val('agenda-edit-title')||'Nueva tarea'; t.startDate=val('agenda-edit-start-date')||AGENDA_HOY; t.endDate=val('agenda-edit-end-date')||t.startDate; t.date=t.endDate; t.deliveryTime=val('agenda-edit-time')||'09:00'; t.time=t.deliveryTime; t.tag=val('agenda-edit-tag')||'tarea'; t.tagColor=val('agenda-edit-color')||'#00f0ff'; t.color=t.tagColor; t.state=val('agenda-edit-state')||'Pendiente'; t.pilar=val('agenda-edit-pilar')||'contenido'; t.driveLink=val('agenda-edit-drive-link'); t.notes=val('agenda-edit-notes'); t.tagLarge=!!document.getElementById('agenda-edit-tag-large')?.checked;
+    updateAgendaPreview(t.tag,t.tagColor); renderAgenda(); try{renderDashboard();}catch(e){} queueAgendaSave(); if(rerender) openAgendaEditor(t.id);
+  };
+  window.editAgendaTitleInline = function(ev,id){const t=(window.agendaTasks||[]).find(x=>x.id===id); if(!t)return; t.title=ev.currentTarget.innerText.trim()||'Nueva tarea'; if(agendaActiveTaskId===id){const e=document.getElementById('agenda-edit-title'); if(e)e.value=t.title;} queueAgendaSave();};
+  window.createAgendaTaskInDay = function(iso){const first=agendaDefaultTags[1]||agendaDefaultTags[0]; const t={id:'AG-'+Date.now(),title:'Nueva tarea',startDate:iso,endDate:iso,date:iso,deliveryTime:'09:00',time:'09:00',tag:first.name,tagColor:first.color,color:first.color,tagLarge:false,state:'Pendiente',pilar:'contenido',driveLink:'',notes:''}; window.agendaTasks.push(t); renderAgenda(); openAgendaEditor(t.id); queueAgendaSave();};
+  window.addAgendaTask = function(){createAgendaTaskInDay(AGENDA_HOY);};
+  window.duplicateAgendaActive = function(){const t=(window.agendaTasks||[]).find(x=>x.id===agendaActiveTaskId); if(!t)return; const copy={...t,id:'AG-'+Date.now(),title:(t.title||'Tarea')+' copia'}; window.agendaTasks.push(copy); renderAgenda(); openAgendaEditor(copy.id); queueAgendaSave();};
+  window.deleteAgendaActive = function(){if(!agendaActiveTaskId)return; if(!confirm('¿Eliminar esta tarea personal?'))return; window.agendaTasks=window.agendaTasks.filter(t=>t.id!==agendaActiveTaskId); closeAgendaEditor(); renderAgenda(); try{renderDashboard();}catch(e){} queueAgendaSave();};
+  window.applyAgendaQuickTag = function(name,color){const tag=document.getElementById('agenda-edit-tag'), c=document.getElementById('agenda-edit-color'); if(tag)tag.value=name; if(c)c.value=color; syncAgendaEditor();};
+  window.saveAgendaDefaultTag = function(){const name=(document.getElementById('agenda-edit-tag')?.value||'').trim(), color=document.getElementById('agenda-edit-color')?.value||'#00f0ff'; if(!name)return; const ex=agendaDefaultTags.find(t=>t.name.toLowerCase()===name.toLowerCase()); if(ex)ex.color=color; else agendaDefaultTags.push({name,color,createdByUser:true}); renderAgendaTagHelpers(); const h=document.getElementById('agenda-saved-hint'); if(h)h.classList.add('active');};
+  window.setAgendaCalendarView = function(view,btn){agendaCalendarView=view;document.querySelectorAll('[data-agenda-view]').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');renderAgenda();};
+  window.setAgendaViewMode = function(mode,btn){agendaViewMode=mode;document.querySelectorAll('[data-agenda-mode]').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');renderAgenda();};
+  window.setAgendaStatusFilter = function(f,el){agendaStatusFilter=f;document.querySelectorAll('[data-agenda-filter]').forEach(p=>p.classList.remove('active-filter'));if(el)el.classList.add('active-filter');renderAgenda();};
+  window.changeAgendaMonth = function(delta){agendaMonth+=delta; while(agendaMonth<0){agendaMonth+=12;agendaYear--;} while(agendaMonth>11){agendaMonth-=12;agendaYear++;} renderAgenda();};
+  window.goAgendaToday = function(){const [y,m]=AGENDA_HOY.split('-').map(Number); agendaYear=y; agendaMonth=m-1; renderAgenda();};
+  const oldUpdateKpis = window.updateDashboardKpis;
+  window.updateDashboardKpis = function(){
+    normalizeAllAgenda(); let counts={overdue:0,today:0,'due-soon':0,'on-track':0};
+    (window.agendaTasks||[]).forEach(t=>{const k=statusForAgenda(t); if(counts[k]!==undefined)counts[k]++;});
+    const set=(id,v)=>{const e=document.getElementById(id); if(e)e.textContent=v;};
+    set('kpi-overdue',counts.overdue); set('kpi-today',counts.today); set('kpi-soon',counts['due-soon']); set('kpi-track',counts['on-track']); set('dash-active',(window.agendaTasks||[]).length);
+  };
+  function installAgendaRestored(){
+    const sec=document.getElementById('sec-agenda'); if(sec) sec.innerHTML = agendaSectionHTML();
+    let ed=document.getElementById('agenda-editor'); if(!ed){ed=document.createElement('aside');ed.id='agenda-editor';ed.className='agenda-editor';document.body.appendChild(ed);} ed.innerHTML=agendaEditorHTML();
+    normalizeAllAgenda(); renderAgenda();
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',installAgendaRestored); else installAgendaRestored();
+})();
+</script>
+
 </body>
 </html>
