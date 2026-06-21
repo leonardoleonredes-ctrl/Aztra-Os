@@ -7987,6 +7987,47 @@ body[data-aztra-role="editor"] [data-permission="admin"]{
 }
 </style>
 
+
+<style id="aztra-role-manager-fix-css">
+.aztra-owner-help{
+  display:grid;
+  gap:.35rem;
+  padding:.85rem;
+  border-radius:16px;
+  border:1px solid rgba(251,191,36,.30);
+  background:rgba(251,191,36,.08);
+  color:rgba(255,255,255,.86);
+  margin:.75rem 0;
+}
+.aztra-owner-help strong{color:#fff}
+.aztra-owner-help code{
+  display:block;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  background:rgba(0,0,0,.28);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:12px;
+  padding:.65rem;
+  color:#fff;
+  font-size:.78rem;
+  line-height:1.45;
+}
+.aztra-role-inline-input,
+.aztra-role-inline-select{
+  width:100%;
+  min-width:130px;
+  border:1px solid color-mix(in srgb,var(--aztra-accent,#00f0ff) 22%, rgba(255,255,255,.10));
+  border-radius:12px;
+  background:rgba(0,0,0,.22);
+  color:#fff;
+  padding:.55rem .65rem;
+  font-weight:800;
+}
+.aztra-role-inline-select option{background:#0b1024;color:#fff}
+.aztra-mini-save-role{width:100%;min-height:38px}
+.aztra-role-manager-card{margin-top:1rem}
+</style>
+
 </head>
 <body class="mode-macro">
 <div class="luminar-popup-backdrop" id="luminar-popup-backdrop"><div class="luminar-popup" id="luminar-popup-box"><h3>Luminar</h3><p id="luminar-popup-message"></p><button class="btn" onclick="closeLuminarPopup()">Aceptar</button></div></div>
@@ -9614,6 +9655,45 @@ Se quitará de la biblioteca de etiquetas. Las tareas que ya la usan conservará
       <div class="aztra-permission-list" id="aztra-permission-list"></div>
     </div>
   </div>
+
+
+  <div class="aztra-access-card aztra-role-manager-card">
+    <div class="aztra-access-card-head">
+      <span>Asignar roles y cargos</span>
+      <small>Disponible para Owner/Admin. Si no ves usuarios, primero convierte tu cuenta principal en Owner desde Supabase SQL.</small>
+    </div>
+
+    <div class="aztra-owner-help" id="aztra-owner-help">
+      <strong>Primer acceso:</strong>
+      <span>Después de crear tu cuenta, ejecuta en Supabase SQL:</span>
+      <code>update public.profiles set role='owner', cargo='Owner', active=true where email='TU_CORREO_AQUI';</code>
+    </div>
+
+    <div class="aztra-access-actions">
+      <button class="btn-primary" onclick="aztraLoadProfiles()">Cargar usuarios</button>
+      <button class="btn" onclick="aztraShowOwnerSQL()">Ver SQL para hacerme Owner</button>
+    </div>
+
+    <div class="aztra-users-table-wrap">
+      <table class="aztra-users-table">
+        <thead>
+          <tr>
+            <th>Usuario</th>
+            <th>Email</th>
+            <th>Cargo</th>
+            <th>Rol</th>
+            <th>Activo</th>
+            <th>Cliente</th>
+            <th>Guardar</th>
+          </tr>
+        </thead>
+        <tbody id="aztra-role-editor-body">
+          <tr><td colspan="7">Carga usuarios para editar roles.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
 
   <div class="aztra-access-card">
     <div class="aztra-access-card-head">
@@ -16537,6 +16617,162 @@ th:nth-child(8),td:nth-child(8){width:20%}
     buildInlinePrintPlan();
     setTimeout(buildInlinePrintPlan,400);
     setTimeout(buildInlinePrintPlan,1200);
+  });
+})();
+</script>
+
+
+<script id="aztra-role-manager-fix-js">
+(function(){
+  function $(id){return document.getElementById(id);}
+  function safeAlert(msg){
+    try{ if(typeof showLuminarPopup==='function') showLuminarPopup(msg); else alert(msg); }
+    catch(e){ console.log(msg); }
+  }
+  function esc(v){
+    return String(v ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function getSb(){
+    if(window.aztraSupabase) return window.aztraSupabase;
+    try{
+      const cfg=JSON.parse(localStorage.getItem('aztraSupabaseAccessConfig_v1')||'{}');
+      const url=cfg.url || (typeof SUPABASE_URL!=='undefined'?SUPABASE_URL:'');
+      const key=cfg.key || (typeof SUPABASE_KEY!=='undefined'?SUPABASE_KEY:'');
+      if(url && key && window.supabase){
+        window.aztraSupabase=window.supabase.createClient(url,key);
+        return window.aztraSupabase;
+      }
+    }catch(e){}
+    return null;
+  }
+  async function getSession(){
+    const sb=getSb();
+    if(!sb) return null;
+    const {data}=await sb.auth.getSession();
+    return data.session || null;
+  }
+  async function getMyProfile(){
+    const sb=getSb();
+    const session=await getSession();
+    if(!sb || !session?.user) return null;
+    const {data,error}=await sb.from('profiles').select('*').eq('id',session.user.id).maybeSingle();
+    if(error){ console.warn(error); return null; }
+    return data;
+  }
+  function isAdminRole(role){
+    role=String(role||'').toLowerCase();
+    return role==='owner' || role==='admin';
+  }
+  function roleOptions(selected){
+    const roles=[['viewer','Viewer'],['client','Client'],['designer','Designer'],['editor','Editor'],['admin','Admin'],['owner','Owner']];
+    return roles.map(([v,l])=>`<option value="${v}" ${v===selected?'selected':''}>${l}</option>`).join('');
+  }
+  function activeOptions(active){
+    return `<option value="true" ${active?'selected':''}>Activo</option><option value="false" ${!active?'selected':''}>Inactivo</option>`;
+  }
+  function clientScopeToText(v){
+    if(Array.isArray(v)) return v.join(', ');
+    return String(v||'');
+  }
+
+  window.aztraShowOwnerSQL=async function(){
+    const session=await getSession();
+    const email=session?.user?.email || 'TU_CORREO_AQUI';
+    const sql=`update public.profiles set role='owner', cargo='Owner', active=true where email='${email}';`;
+    try{ await navigator.clipboard.writeText(sql); }catch(e){}
+    safeAlert('SQL para Owner copiado o mostrado en consola. Ejecútalo en Supabase SQL Editor.');
+    console.log('SQL OWNER:', sql);
+  };
+
+  async function renderRoleEditor(profiles){
+    const body=$('aztra-role-editor-body');
+    if(!body) return;
+    if(!profiles?.length){
+      body.innerHTML='<tr><td colspan="7">No hay perfiles para mostrar. Revisa si ejecutaste el SQL de profiles/RLS.</td></tr>';
+      return;
+    }
+    body.innerHTML=profiles.map(p=>`
+      <tr data-profile-id="${esc(p.id)}">
+        <td>${esc(p.full_name || 'Usuario')}</td>
+        <td>${esc(p.email || '')}</td>
+        <td><input class="aztra-role-inline-input" id="cargo-${esc(p.id)}" value="${esc(p.cargo || '')}" placeholder="Cargo"></td>
+        <td><select class="aztra-role-inline-select" id="role-${esc(p.id)}">${roleOptions(p.role || 'viewer')}</select></td>
+        <td><select class="aztra-role-inline-select" id="active-${esc(p.id)}">${activeOptions(p.active !== false)}</select></td>
+        <td><input class="aztra-role-inline-input" id="client-${esc(p.id)}" value="${esc(clientScopeToText(p.client_scope))}" placeholder="Cliente o clientes"></td>
+        <td><button class="btn-primary aztra-mini-save-role" onclick="aztraUpdateUserRole('${esc(p.id)}')">Guardar</button></td>
+      </tr>
+    `).join('');
+  }
+
+  const previousLoadProfiles=window.aztraLoadProfiles;
+  window.aztraLoadProfiles=async function(){
+    const sb=getSb();
+    const body=$('aztra-role-editor-body');
+    if(!sb){
+      if(body) body.innerHTML='<tr><td colspan="7">Configura Supabase primero.</td></tr>';
+      safeAlert('Configura Supabase primero.');
+      return;
+    }
+    const session=await getSession();
+    if(!session){
+      if(body) body.innerHTML='<tr><td colspan="7">Inicia sesión primero.</td></tr>';
+      safeAlert('Inicia sesión primero.');
+      return;
+    }
+    const me=await getMyProfile();
+    if(!me){
+      if(body) body.innerHTML='<tr><td colspan="7">Tu perfil no existe todavía. Ejecuta el SQL de profiles/RLS o vuelve a iniciar sesión.</td></tr>';
+      safeAlert('No se encontró tu perfil en profiles.');
+      return;
+    }
+    const ownerHelp=$('aztra-owner-help');
+    if(ownerHelp) ownerHelp.style.display=isAdminRole(me.role)?'none':'grid';
+
+    if(!isAdminRole(me.role)){
+      if(body) body.innerHTML=`<tr><td colspan="7">Tu rol actual es <b>${esc(me.role||'viewer')}</b>. Para editar roles, primero debes ser Owner o Admin.</td></tr>`;
+      safeAlert('Tu cuenta aún no es Owner/Admin. Ejecuta el SQL para hacerte Owner.');
+      return;
+    }
+
+    const {data,error}=await sb.from('profiles').select('*').order('created_at',{ascending:false});
+    if(error){
+      console.warn(error);
+      if(body) body.innerHTML='<tr><td colspan="7">No se pudo leer profiles. Revisa políticas RLS.</td></tr>';
+      safeAlert('No se pudo leer profiles. Revisa RLS.');
+      return;
+    }
+    await renderRoleEditor(data || []);
+    if(typeof previousLoadProfiles==='function'){
+      try{ await previousLoadProfiles(); }catch(e){}
+    }
+  };
+
+  window.aztraUpdateUserRole=async function(id){
+    const sb=getSb();
+    if(!sb){ safeAlert('Configura Supabase primero.'); return; }
+    const me=await getMyProfile();
+    if(!isAdminRole(me?.role)){
+      safeAlert('Solo Owner/Admin puede cambiar roles.');
+      return;
+    }
+    const cargo=$(`cargo-${id}`)?.value.trim() || '';
+    const role=$(`role-${id}`)?.value || 'viewer';
+    const active=($(`active-${id}`)?.value || 'true') === 'true';
+    const clientText=$(`client-${id}`)?.value.trim() || '';
+    const client_scope=clientText ? clientText.split(',').map(x=>x.trim()).filter(Boolean) : [];
+
+    const {error}=await sb.from('profiles').update({cargo,role,active,client_scope}).eq('id',id);
+    if(error){
+      console.warn(error);
+      safeAlert('No se pudo actualizar rol: '+error.message);
+      return;
+    }
+    safeAlert('Rol actualizado correctamente.');
+    await window.aztraLoadProfiles();
+  };
+
+  document.addEventListener('DOMContentLoaded',()=>{
+    setTimeout(()=>{ try{ window.aztraLoadProfiles(); }catch(e){} },1200);
   });
 })();
 </script>
