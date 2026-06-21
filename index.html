@@ -7583,6 +7583,168 @@ body{
 }
 </style>
 
+
+<style id="aztra-mobile-theme-coherence-css">
+/* ==========================================================
+   AZTRA OS — Coherencia visual PC + móvil
+   Objetivo: que móvil herede el tema activo sin cambiar estructura.
+   No toca Supabase, Plan, Agenda, PDF ni lógica funcional.
+   ========================================================== */
+
+@media(max-width:1024px){
+  html,
+  body{
+    background:var(--aztra-bg-live, var(--bg-live, linear-gradient(var(--bg-gradient-dir,135deg), var(--bg-gradient-start,#0a0f24), var(--bg-gradient-end,#1a0b2e))))!important;
+    background-image:var(--aztra-bg-live, var(--bg-live, linear-gradient(var(--bg-gradient-dir,135deg), var(--bg-gradient-start,#0a0f24), var(--bg-gradient-end,#1a0b2e))))!important;
+    background-attachment:fixed!important;
+  }
+
+  .main-content{
+    background:transparent!important;
+  }
+
+  .header{
+    background:
+      linear-gradient(180deg,
+        color-mix(in srgb,var(--aztra-surface,var(--card-bg,rgba(255,255,255,.06))) 84%, rgba(5,8,18,.90)),
+        color-mix(in srgb,var(--aztra-surface-2,rgba(255,255,255,.03)) 78%, rgba(5,8,18,.72))
+      )!important;
+    border-bottom-color:color-mix(in srgb,var(--aztra-accent,var(--theme-accent,#00f0ff)) 32%, transparent)!important;
+    box-shadow:0 16px 42px rgba(0,0,0,.28)!important;
+  }
+
+  .aztra-mobile-brand{
+    background:
+      linear-gradient(135deg,
+        color-mix(in srgb,var(--aztra-surface,rgba(255,255,255,.08)) 82%, transparent),
+        color-mix(in srgb,var(--aztra-surface-2,rgba(255,255,255,.035)) 88%, transparent)
+      ),
+      color-mix(in srgb,var(--aztra-bg-live,#07101f) 28%, rgba(7,10,24,.72))!important;
+    border-color:color-mix(in srgb,var(--aztra-accent,var(--theme-accent,#00f0ff)) 48%, transparent)!important;
+    box-shadow:
+      0 14px 34px rgba(0,0,0,.34),
+      0 0 24px color-mix(in srgb,var(--aztra-accent,var(--theme-accent,#00f0ff)) 24%, transparent)!important;
+  }
+
+  .sidebar,
+  body.sidebar-collapsed .sidebar{
+    background:var(--aztra-sidebar-bg-live,var(--sidebar-bg,linear-gradient(180deg,rgba(7,10,24,.96),rgba(7,10,24,.82))))!important;
+    border-right-color:color-mix(in srgb,var(--aztra-accent,var(--theme-accent,#00f0ff)) 30%, transparent)!important;
+  }
+
+  .aztra-mobile-backdrop{
+    background:color-mix(in srgb,var(--aztra-bg-live,#000) 44%, rgba(0,0,0,.62))!important;
+  }
+
+  .card,
+  .settings-panel,
+  .settings-nav,
+  .luminar-settings-block,
+  .luminar-theme-section,
+  .aztra-config-block,
+  #sec-dashboard .l2-main-shell,
+  #sec-dashboard .l2-card,
+  #sec-dashboard .l2-kpi,
+  #sec-dashboard .dash-focus-card,
+  #sec-dashboard .l2-topbar,
+  .aztra-personal-mode-card,
+  .aztra-personal-page-hero,
+  .aztra-selected-theme-bar{
+    background:
+      linear-gradient(180deg,
+        var(--aztra-surface,rgba(255,255,255,.060)),
+        var(--aztra-surface-2,rgba(255,255,255,.030))
+      )!important;
+    border-color:var(--aztra-border,color-mix(in srgb,var(--aztra-accent,#00f0ff) 24%, transparent))!important;
+  }
+
+  #sec-dashboard .l2-date-widget{
+    background:
+      radial-gradient(circle at 0% 0%, color-mix(in srgb,var(--aztra-accent,var(--theme-accent,#00f0ff)) 16%, transparent), transparent 34%),
+      linear-gradient(135deg,
+        color-mix(in srgb,var(--aztra-accent-2,var(--neon-rosa,#ff00ff)) 18%, rgba(255,255,255,.04)),
+        color-mix(in srgb,var(--aztra-accent,var(--theme-accent,#00f0ff)) 10%, rgba(255,255,255,.025))
+      )!important;
+  }
+
+  #sec-dashboard .aztra-hero-quote,
+  #sec-dashboard .aztra-focus-card-premium{
+    background:
+      radial-gradient(circle at 100% 0%, color-mix(in srgb,var(--aztra-accent,var(--theme-accent,#00f0ff)) 16%, transparent), transparent 32%),
+      linear-gradient(135deg,var(--aztra-surface,rgba(255,255,255,.060)),var(--aztra-surface-2,rgba(255,255,255,.030)))!important;
+    border-color:color-mix(in srgb,var(--aztra-accent,var(--theme-accent,#00f0ff)) 28%, transparent)!important;
+  }
+
+  .menu-item:hover,
+  .menu-item.active,
+  .settings-tab.active,
+  #sec-dashboard .aztra-perf-tab.active{
+    background:
+      linear-gradient(135deg,
+        color-mix(in srgb,var(--aztra-accent,var(--theme-accent,#00f0ff)) 26%, transparent),
+        color-mix(in srgb,var(--aztra-accent-2,var(--neon-rosa,#ff00ff)) 20%, transparent)
+      )!important;
+    border-color:color-mix(in srgb,var(--aztra-accent,var(--theme-accent,#00f0ff)) 42%, transparent)!important;
+  }
+
+  .btn-primary,
+  .l2-primary-btn,
+  .aztra-mobile-menu-fab,
+  body[data-aztra-btn-scope="all"] .btn,
+  body[data-aztra-btn-scope="all"] .l2-icon-btn,
+  body[data-aztra-btn-scope="all"] .dash-focus-btn,
+  body[data-aztra-btn-scope="dashboard"] #sec-dashboard .btn,
+  body[data-aztra-btn-scope="dashboard"] #sec-dashboard .l2-icon-btn,
+  body[data-aztra-btn-scope="dashboard"] #sec-dashboard .dash-focus-btn{
+    background:var(--aztra-btn-bg,linear-gradient(135deg,var(--aztra-accent,#00f0ff),var(--aztra-accent-2,#ff00ff)))!important;
+    color:var(--aztra-btn-text,#fff)!important;
+    border-color:var(--aztra-btn-border,color-mix(in srgb,var(--aztra-accent,#00f0ff) 52%, transparent))!important;
+    box-shadow:var(--aztra-btn-shadow,0 14px 32px rgba(0,240,255,.16))!important;
+  }
+
+  .aztra-back-button{
+    background:
+      linear-gradient(135deg,
+        color-mix(in srgb,var(--aztra-surface,rgba(255,255,255,.07)) 85%, transparent),
+        color-mix(in srgb,var(--aztra-surface-2,rgba(255,255,255,.03)) 88%, transparent)
+      )!important;
+    border-color:var(--aztra-border,rgba(255,255,255,.14))!important;
+  }
+
+  .input,
+  .select,
+  .toolbar-search,
+  #sec-dashboard .l2-search,
+  #sec-dashboard .l2-search input,
+  .aztra-mini-select,
+  .editor-title,
+  #note-body{
+    background:color-mix(in srgb,var(--aztra-surface-2,rgba(255,255,255,.035)) 72%, rgba(0,0,0,.16))!important;
+    border-color:color-mix(in srgb,var(--aztra-accent,var(--theme-accent,#00f0ff)) 22%, rgba(255,255,255,.10))!important;
+    color:var(--aztra-text-main,#fff)!important;
+  }
+
+  .muted,
+  #main-subtitle,
+  .luminar-section-head p,
+  .aztra-config-head p,
+  #sec-dashboard .l2-hero p,
+  #sec-dashboard .dash-focus-desc,
+  .aztra-performance-subtitle,
+  .aztra-personal-mode-card p,
+  .aztra-personal-page-hero p{
+    color:var(--aztra-text-muted,rgba(255,255,255,.68))!important;
+  }
+
+  /* Mantener semántica de selects del Plan: no pisar estados, redes, objetivos */
+  #sec-plan select,
+  #sec-plan .content-table select,
+  #sec-plan .content-table option{
+    background-color:revert-layer;
+  }
+}
+</style>
+
 </head>
 <body class="mode-macro">
 <div class="luminar-popup-backdrop" id="luminar-popup-backdrop"><div class="luminar-popup" id="luminar-popup-box"><h3>Luminar</h3><p id="luminar-popup-message"></p><button class="btn" onclick="closeLuminarPopup()">Aceptar</button></div></div>
@@ -15336,6 +15498,63 @@ th:nth-child(8),td:nth-child(8){width:18%}
     setTimeout(cleanOldPersonalCopy,600);
     setTimeout(cleanOldPersonalCopy,1500);
   });
+})();
+</script>
+
+
+<script id="aztra-mobile-theme-coherence-js">
+/* ==========================================================
+   AZTRA OS — Reaplicar coherencia visual móvil al cambiar tema/color.
+   ========================================================== */
+(function(){
+  function ensureMobileThemeCoherence(){
+    try{ if(typeof applyAztraColorSystem==='function') applyAztraColorSystem(); }catch(e){}
+    try{ if(typeof applyAztraButtonVariables==='function') applyAztraButtonVariables(false); }catch(e){}
+
+    const root=getComputedStyle(document.documentElement);
+    const accent=root.getPropertyValue('--aztra-accent').trim() || root.getPropertyValue('--theme-accent').trim() || '#00f0ff';
+    const bg=root.getPropertyValue('--aztra-bg-live').trim();
+
+    document.documentElement.style.setProperty('--aztra-mobile-active-accent',accent);
+    if(bg) document.documentElement.style.setProperty('--aztra-mobile-active-bg',bg);
+
+    document.body.dataset.aztraMobileThemeSynced='true';
+  }
+
+  window.ensureAztraMobileThemeCoherence=ensureMobileThemeCoherence;
+
+  function wrap(fnName){
+    const old=window[fnName];
+    if(typeof old==='function' && !old.__aztraMobileThemeWrapped){
+      const wrapped=function(){
+        const result=old.apply(this,arguments);
+        setTimeout(ensureMobileThemeCoherence,80);
+        setTimeout(ensureMobileThemeCoherence,260);
+        return result;
+      };
+      wrapped.__aztraMobileThemeWrapped=true;
+      window[fnName]=wrapped;
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded',()=>{
+    ['applyTheme','applyVisualColors','applyLuminarThemePreset','applyAztraStyleExtras','applyAztraButtonVariables','applyAztraColorSystem','saveTheme'].forEach(wrap);
+
+    ['bg-mode','bg-dir','bg-start','bg-end','bg-solid','btn-color-mode','btn-color-1','btn-color-2','btn-color-3','stat-color-1','stat-color-2','stat-color-3','stat-color-4','popup-color-mode','popup-color-1','popup-color-2','aztra-sidebar-color','aztra-sidebar-accent'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(el && !el.__aztraMobileThemeSync){
+        el.__aztraMobileThemeSync=true;
+        el.addEventListener('input',()=>setTimeout(ensureMobileThemeCoherence,60));
+        el.addEventListener('change',()=>setTimeout(ensureMobileThemeCoherence,60));
+      }
+    });
+
+    setTimeout(ensureMobileThemeCoherence,400);
+    setTimeout(ensureMobileThemeCoherence,1400);
+  });
+
+  window.addEventListener('resize',()=>setTimeout(ensureMobileThemeCoherence,120));
+  window.addEventListener('orientationchange',()=>setTimeout(ensureMobileThemeCoherence,260));
 })();
 </script>
 
